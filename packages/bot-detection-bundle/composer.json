@@ -1,0 +1,59 @@
+{
+    "name": "setono/bot-detection-bundle",
+    "description": "A Symfony bundle that allows you to test if a user agent is a bot",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "Joachim Løvgaard",
+            "email": "joachim@loevgaard.dk"
+        }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "symfony/config": "^8.0",
+        "symfony/dependency-injection": "^8",
+        "symfony/http-foundation": "^8",
+        "symfony/http-kernel": "^8",
+        "twig/twig": "^3"
+    },
+    "require-dev": {
+        "infection/infection": "^0.26.6 || ^0.27.0",
+        "matomo/device-detector": "^5.0 || ^6.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.3 || ^5.1",
+        "nette/php-generator": "^3.6 || ^4.1",
+        "phpspec/prophecy-phpunit": "^2.0",
+        "phpunit/phpunit": "^9.6",
+        "psalm/plugin-phpunit": "^0.18",
+        "setono/code-quality-pack": "^2.9",
+        "shipmonk/composer-dependency-analyser": "^1.8",
+        "symfony/console": "^5.4 || ^6.4 || ^7.0",
+        "symfony/yaml": "^5.4 || ^6.4 || ^7.0",
+        "webmozart/assert": "^1.11"
+    },
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Setono\\BotDetectionBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Setono\\BotDetectionBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false,
+            "ergebnis/composer-normalize": true,
+            "infection/extension-installer": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "analyse": "psalm",
+        "check-style": "ecs check",
+        "fix-style": "ecs check --fix",
+        "phpunit": "phpunit"
+    }
+}

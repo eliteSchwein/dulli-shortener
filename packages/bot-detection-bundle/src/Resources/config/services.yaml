@@ -1,0 +1,34 @@
+# config/services/setono_bot_detection.yaml
+parameters:
+  setono_bot_detection.popular_bots:
+    - Googlebot
+    - Bingbot
+    - Yahoo! Slurp
+    - DuckDuckBot
+    - Baiduspider
+    - YandexBot
+    - facebookexternalhit
+    - facebookcatalog
+    - ia_archiver
+
+services:
+  Setono\BotDetectionBundle\BotDetector\BotDetectorInterface:
+    alias: setono_bot_detection.bot_detector.default
+
+  setono_bot_detection.bot_detector.default:
+    class: Setono\BotDetectionBundle\BotDetector\BotDetector
+    arguments:
+      - '@request_stack'
+      - '%setono_bot_detection.popular_bots%'
+
+  setono_bot_detection.twig.extension:
+    class: Setono\BotDetectionBundle\Twig\Extension
+    tags:
+      - { name: twig.extension }
+
+  setono_bot_detection.twig.runtime:
+    class: Setono\BotDetectionBundle\Twig\Runtime
+    arguments:
+      - '@setono_bot_detection.bot_detector.default'
+    tags:
+      - { name: twig.runtime }

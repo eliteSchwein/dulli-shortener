@@ -31,7 +31,8 @@ class UrlRepository extends ServiceEntityRepository
         if($flush) $this->getEntityManager()->flush();
     }
 
-    public function purgeExpired() {
+    public function purgeExpired(): void
+    {
         $date = new DateTime();
         $this->createQueryBuilder('u')
             ->where('u.endDate < :date')

@@ -6,12 +6,12 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "sass": "^1.83",
-        "vite": "^5",
-        "vite-plugin-symfony": "^6.4"
+        "sass": "^1.97",
+        "vite": "^7",
+        "vite-plugin-symfony": "^8"
     },
     "dependencies": {
         "@mdi/font": "^7.4.47",
-        "bootstrap": "^5.3.3"
+        "bootstrap": "^5.3.8"
     }
 }

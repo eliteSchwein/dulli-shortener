@@ -68,30 +68,27 @@ class MainController extends AbstractController
         }
 
         if(!$customValid) {
-            if(!array_key_exists('isLimited', $data) || $data['isLimited'] !== '1') {
+            if((!array_key_exists('isLimited', $data) || $data['isLimited'] !== '1')) {
                 $data['isLimited'] = '1';
-                $data['limit'] = '10';
+                $data['limit'] = '1024';
             }
 
             $limit = intval($data['limit']);
 
-            if($limit > 10) {
-                $data['limit'] = '10';
+            if($limit > 1024) {
+                $data['limit'] = '1024';
             }
 
-            if(!array_key_exists('isRemaining', $data) || $data['isRemaining'] !== '1') {
+            if((!array_key_exists('isRemaining', $data) || $data['isRemaining'] !== '1')) {
                 $data['isRemaining'] = '1';
-                $data['remainingUnit'] = 'hours';
-                $data['remainingTime'] = '6';
+                $data['remainingUnit'] = 'days';
+                $data['remainingTime'] = '7';
             }
 
             if($data['remainingUnit'] === 'days') {
-                $data['remainingUnit'] = 'hours';
-                $data['remainingTime'] = '6';
-            }
-
-            if($data['remainingUnit'] === 'hours' && intval($data['remainingTime']) > 6) {
-                $data['remainingTime'] = '6';
+                if(intval($data['limit']) > 7) {
+                    $data['remainingTime'] = '7';
+                }
             }
         }
 
