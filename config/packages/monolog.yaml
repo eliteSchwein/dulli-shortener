@@ -27,37 +27,16 @@ when@test:
     monolog:
         handlers:
             main:
-                type: fingers_crossed
-                action_level: error
-                handler: nested
-                excluded_http_codes: [404, 405]
-                channels: ["!event"]
-            nested:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
-                level: debug
+                level: warning
+                channels: ["!event"]
 
 when@prod:
     monolog:
         handlers:
-            # Write WARNING+ directly (no buffering)
             main:
                 type: stream
-                path: php://stderr
+                path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: warning
-                formatter: monolog.formatter.json
-
-            # Keep console handler if you use CLI in prod
-            console:
-                type: console
-                process_psr_3_messages: false
-                channels: ["!event", "!doctrine"]
-
-            # Deprecations (optional)
-            deprecation:
-                type: stream
-                channels: [deprecation]
-                path: php://stderr
-                level: notice
-                formatter: monolog.formatter.json
-
+                channels: ["!event"]
