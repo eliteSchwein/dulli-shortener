@@ -1,7 +1,4 @@
 when@dev:
     _errors:
-        resource: '@FrameworkBundle/Resources/config/routing/errors.php'
+        resource: '@FrameworkBundle/Resources/config/routing/errors.xml'
         prefix: /_error
-framework:
-    php_errors:
-        log: true
