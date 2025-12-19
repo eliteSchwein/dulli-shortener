@@ -12,9 +12,9 @@ when@prod:
 when@dev:
     framework:
         cache:
-            app: cache.adapter.null
+            app: cache.adapter.filesystem
 
 when@test:
     framework:
         cache:
-            app: cache.adapter.null
+            app: cache.adapter.filesystem
