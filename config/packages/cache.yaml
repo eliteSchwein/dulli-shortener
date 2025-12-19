@@ -1,13 +1,20 @@
 framework:
     cache:
-        # Optional but recommended so cache keys stay stable across deploys
-        # prefix_seed: '%env(APP_NAME)%'
-
-        # Default (will be overridden per env below)
-        app: cache.adapter.filesystem
+    # optional but recommended
+    # prefix_seed: '%env(APP_NAME)%'
 
 when@prod:
     framework:
         cache:
             app: cache.adapter.redis
             default_redis_provider: '%env(resolve:REDIS_URL)%'
+
+when@dev:
+    framework:
+        cache:
+            app: cache.adapter.null
+
+when@test:
+    framework:
+        cache:
+            app: cache.adapter.null
