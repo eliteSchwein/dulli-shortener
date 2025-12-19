@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Url;
+use App\Repository\TokenRepository;
 use App\Repository\UrlRepository;
 use DateTime;
 use Setono\BotDetectionBundle\BotDetector\BotDetectorInterface;
@@ -15,7 +16,8 @@ class MainController extends AbstractController
 {
     public function __construct(
         protected readonly UrlRepository $urlRepository,
-        protected readonly BotDetectorInterface $botDetector
+        protected readonly BotDetectorInterface $botDetector,
+        protected readonly TokenRepository $tokenRepository,
     ) {
 
     }
@@ -48,13 +50,14 @@ class MainController extends AbstractController
 
         if(array_key_exists('isCustom', $data) && $data['isCustom'] === '1') {
             $customValid = true;
-            $customToken = $_ENV['CUSTOM_TOKEN'];
+            $customToken = array_key_exists('customToken', $data) ? $this->tokenRepository->findOneByToken($data['customToken']) : null;
+
 
             if(!array_key_exists('customHash', $data)) {
                 $customValid = false;
             }
 
-            if(!array_key_exists('customToken', $data) || $data['customToken'] !== $customToken) {
+            if(!array_key_exists('customToken', $data) || !$customToken) {
                 $customValid = false;
             }
 
@@ -63,7 +66,9 @@ class MainController extends AbstractController
                 if($oldUrl !== null) {
                     $this->urlRepository->removeUrl($oldUrl);
                 }
-                $url->setHash($data['customHash']);
+                $url
+                    ->setHash($data['customHash'])
+                    ->setToken($customToken);
             }
         }
 

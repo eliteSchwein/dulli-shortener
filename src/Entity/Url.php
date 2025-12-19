@@ -26,6 +26,9 @@ class Url
     #[ORM\Column(nullable: true)]
     private ?int $remainingClicks = null;
 
+    #[ORM\ManyToOne(inversedBy: 'Urls')]
+    private ?Token $token = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class Url
     public function setRemainingClicks(?int $remainingClicks): static
     {
         $this->remainingClicks = $remainingClicks;
+
+        return $this;
+    }
+
+    public function getToken(): ?Token
+    {
+        return $this->token;
+    }
+
+    public function setToken(?Token $token): static
+    {
+        $this->token = $token;
 
         return $this;
     }

@@ -1126,11 +1126,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         },
  *     }>,
  * }
- * @psalm-type MakerConfig = array{
- *     root_namespace?: scalar|null, // Default: "App"
- *     generate_final_classes?: bool, // Default: true
- *     generate_final_entities?: bool, // Default: false
- * }
  * @psalm-type PentatrionViteConfig = array{
  *     public_directory?: scalar|null, // Default: "public"
  *     build_directory?: scalar|null, // we only need build_directory to locate entrypoints.json file, it's the "base" vite config parameter without slashes. // Default: "build"
@@ -1159,6 +1154,11 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         preload_attributes?: list<scalar|null>,
  *     }>,
  * }
+ * @psalm-type MakerConfig = array{
+ *     root_namespace?: scalar|null, // Default: "App"
+ *     generate_final_classes?: bool, // Default: true
+ *     generate_final_entities?: bool, // Default: false
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1182,8 +1182,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         web_profiler?: WebProfilerConfig,
  *         twig_extra?: TwigExtraConfig,
  *         monolog?: MonologConfig,
- *         maker?: MakerConfig,
  *         pentatrion_vite?: PentatrionViteConfig,
+ *         maker?: MakerConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,

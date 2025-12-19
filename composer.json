@@ -101,7 +101,7 @@
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "^8",
         "symfony/debug-bundle": "^8",
-        "symfony/maker-bundle": "^1.0",
+        "symfony/maker-bundle": "^1.65",
         "symfony/phpunit-bridge": "^7.4",
         "symfony/stopwatch": "^8",
         "symfony/web-profiler-bundle": "^8"
