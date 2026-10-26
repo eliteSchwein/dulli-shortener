@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Url;
 use App\Repository\TokenRepository;
 use App\Repository\UrlRepository;
+use App\Service\RecaptchaVerifier;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use DateTime;
 use Setono\BotDetectionBundle\BotDetector\BotDetectorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,14 +21,35 @@ class MainController extends AbstractController
         protected readonly UrlRepository $urlRepository,
         protected readonly BotDetectorInterface $botDetector,
         protected readonly TokenRepository $tokenRepository,
+        protected readonly RecaptchaVerifier $recaptchaVerifier,
+        #[Autowire('%env(string:RECAPTCHA_SITE_KEY)%')]
+        protected readonly string $recaptchaSiteKey,
+        #[Autowire('%env(string:RECAPTCHA_EXPECTED_HOSTNAME)%')]
+        protected readonly string $recaptchaExpectedHostname,
     ) {
 
+    }
+
+    #[Route('/api/recaptcha-config', name: 'app_recaptcha_config', methods: ['GET'])]
+    public function recaptchaConfig(): JsonResponse
+    {
+        if ($this->recaptchaSiteKey === '') {
+            return $this->json(['error' => 'reCAPTCHA is not configured'], 503);
+        }
+
+        return $this->json(['siteKey' => $this->recaptchaSiteKey]);
     }
 
     #[Route('/api', name: 'app_api', methods: ['POST'])]
     public function api(Request $request): Response
     {
         $data = $request->getPayload()->all();
+        $captchaToken = $data['recaptchaToken'] ?? null;
+
+        if (!is_string($captchaToken) || !$this->recaptchaVerifier->verify($captchaToken, $this->recaptchaExpectedHostname)) {
+            return $this->json(['error' => 'reCAPTCHA verification failed. Please try again.'], 403);
+        }
+
         $customValid = false;
 
         if(
