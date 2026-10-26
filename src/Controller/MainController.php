@@ -44,6 +44,11 @@ class MainController extends AbstractController
     public function api(Request $request): Response
     {
         $data = $request->getPayload()->all();
+
+        // Reject unexpected contact-field content before verifying the captcha.
+        if (!array_key_exists('website_contact', $data) || $data['website_contact'] !== '') {
+            return $this->json(['error' => 'Unable to process request. Please try again.'], 403);
+        }
         $captchaToken = $data['recaptchaToken'] ?? null;
 
         if (!is_string($captchaToken) || !$this->recaptchaVerifier->verify($captchaToken, $this->recaptchaExpectedHostname)) {
