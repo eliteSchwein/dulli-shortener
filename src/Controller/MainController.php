@@ -6,6 +6,9 @@ use App\Entity\Url;
 use App\Repository\TokenRepository;
 use App\Repository\UrlRepository;
 use App\Service\RecaptchaVerifier;
+use App\Service\ScamUrlChecker;
+use App\Service\UrlBlacklist;
+use App\Exception\ScamCheckUnavailableException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use DateTime;
@@ -22,6 +25,8 @@ class MainController extends AbstractController
         protected readonly BotDetectorInterface $botDetector,
         protected readonly TokenRepository $tokenRepository,
         protected readonly RecaptchaVerifier $recaptchaVerifier,
+        protected readonly UrlBlacklist $urlBlacklist,
+        protected readonly ScamUrlChecker $scamUrlChecker,
         #[Autowire('%env(string:RECAPTCHA_SITE_KEY)%')]
         protected readonly string $recaptchaSiteKey,
         #[Autowire('%env(string:RECAPTCHA_EXPECTED_HOSTNAME)%')]
@@ -71,6 +76,24 @@ class MainController extends AbstractController
             ]);
         }
 
+        if($this->urlBlacklist->isBlacklisted($data['url'])) {
+            return $this->render('main/index.html.twig', [
+                'invalid' => 'blacklisted'
+            ]);
+        }
+
+        try {
+            if($this->scamUrlChecker->isScam($data['url'])) {
+                return $this->render('main/index.html.twig', [
+                    'invalid' => 'scam'
+                ]);
+            }
+        } catch (ScamCheckUnavailableException) {
+            return $this->render('main/index.html.twig', [
+                'invalid' => 'unavailable'
+            ]);
+        }
+
         $url = new Url();
         $url
             ->setHash(bin2hex(random_bytes(4)))
@@ -102,6 +125,9 @@ class MainController extends AbstractController
         }
 
         if(!$customValid) {
+            // Log the creator's IP unless the URL was created with a valid token.
+            $url->setIpAddress($request->getClientIp());
+
             if((!array_key_exists('isLimited', $data) || $data['isLimited'] !== '1')) {
                 $data['isLimited'] = '1';
                 $data['limit'] = '1024';

@@ -11,6 +11,12 @@
                     <p class="card-text text-danger">shortened URL not found!</p>
                 {% elseif invalid == 'same' %}
                     <p class="card-text text-danger">you cant short this website!</p>
+                {% elseif invalid == 'blacklisted' %}
+                    <p class="card-text text-danger">this domain is not allowed!</p>
+                {% elseif invalid == 'scam' %}
+                    <p class="card-text text-danger">unable to process request!</p>
+                {% elseif invalid == 'unavailable' %}
+                    <p class="card-text text-danger">URL safety check is currently unavailable, please try again later!</p>
                 {% elseif invalid == 'syntax' %}
                     <p class="card-text text-danger">syntax error in request!</p>
                 {% endif %}

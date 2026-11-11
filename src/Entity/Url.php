@@ -29,6 +29,9 @@ class Url
     #[ORM\ManyToOne(inversedBy: 'Urls')]
     private ?Token $token = null;
 
+    #[ORM\Column(length: 45, nullable: true)]
+    private ?string $ipAddress = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class Url
     public function setToken(?Token $token): static
     {
         $this->token = $token;
+
+        return $this;
+    }
+
+    public function getIpAddress(): ?string
+    {
+        return $this->ipAddress;
+    }
+
+    public function setIpAddress(?string $ipAddress): static
+    {
+        $this->ipAddress = $ipAddress;
 
         return $this;
     }

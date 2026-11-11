@@ -34,14 +34,14 @@ final class ListUrlsCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $urls = $this->entityManager->createQueryBuilder()
-            ->select('u.hash', 'u.url')
+            ->select('u.hash', 'u.url', 'u.ipAddress')
             ->from(Url::class, 'u')
             ->orderBy('u.hash', 'ASC')
             ->getQuery()
             ->toIterable();
 
         $table = new Table($output);
-        $table->setHeaders(['Hash', 'Target URL']);
+        $table->setHeaders(['Hash', 'Target URL', 'IP Address']);
         $table->setStyle('box');
 
         $count = 0;
@@ -51,7 +51,7 @@ final class ListUrlsCommand extends Command
             if (!$full && strlen($target) > 80) {
                 $target = substr($target, 0, 77) . '...';
             }
-            $table->addRow([(string) $url['hash'], $target]);
+            $table->addRow([(string) $url['hash'], $target, $url['ipAddress'] ?? '-']);
             ++$count;
         }
 
